@@ -9,14 +9,16 @@ import (
 
 type SystemRoutes struct {
 	healthHandler *handlers.HealthHandler
-	notifyHandler  *handlers.OrderHandler
-	notifyEvent    *event.NotifyEvent
+	notifyHandler *handlers.OrderHandler
+	notifyEvent   *event.NotifyEvent
 }
 
 func (routes *SystemRoutes) MakeEvents() {
 	time.Sleep(5 * time.Second)
 
-	routes.notifyEvent.ProcessRegistered()
+	go routes.notifyEvent.ProcessRegistered()
+	go routes.notifyEvent.ProcessNotifyPayment()
+	go routes.notifyEvent.ProcessNotifyOrder()
 }
 
 func (routes *SystemRoutes) MakeHandlers() *mux.Router {
@@ -34,7 +36,7 @@ func (routes *SystemRoutes) MakeHandlers() *mux.Router {
 func NewSystem(healthHandler *handlers.HealthHandler, notifyHandler *handlers.OrderHandler, notifyEvent *event.NotifyEvent) *SystemRoutes {
 	return &SystemRoutes{
 		healthHandler: healthHandler,
-		notifyHandler:  notifyHandler,
-		notifyEvent:    notifyEvent,
+		notifyHandler: notifyHandler,
+		notifyEvent:   notifyEvent,
 	}
 }

@@ -28,7 +28,7 @@ func main() {
 		panic("Erro to start application")
 	}
 
-	go app.MakeEvents()
+	app.MakeEvents()
 
 	router := app.MakeHandlers()
 
