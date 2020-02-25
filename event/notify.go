@@ -20,6 +20,12 @@ type NotifyEvent struct {
 	event   event.Event
 }
 
+func (event *NotifyEvent) MakeEvents() {
+	go event.ProcessRegistered()
+	go event.ProcessNotifyPayment()
+	go event.ProcessNotifyOrder()
+}
+
 func NewNotify(usecase notify.UseCase, event event.Event) *NotifyEvent {
 	return &NotifyEvent{
 		usecase: usecase,

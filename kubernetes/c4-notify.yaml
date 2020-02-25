@@ -50,6 +50,18 @@ items:
         - name: c4-notify
           image: fernandocagale/c4-notify
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
           ports:
           - containerPort: 8080
           envFrom:

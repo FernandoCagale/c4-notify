@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/FernandoCagale/c4-notify/api/middleware"
 	"github.com/joho/godotenv"
 	"log"
@@ -17,21 +16,22 @@ func init() {
 func main() {
 	session, err := SetupMongoDB()
 	if err != nil {
-		fmt.Println(err.Error())
 		panic("Erro to start MongoDB")
 	}
 
 	defer session.Close()
 
+	events, err := SetupEvents(session)
+	if err != nil {
+		panic("Erro to start Events")
+	}
+	events.MakeEvents()
+
 	app, err := SetupApplication(session)
 	if err != nil {
 		panic("Erro to start application")
 	}
-
-	app.MakeEvents()
-
 	router := app.MakeHandlers()
-
 	router.Use(middleware.Header)
 
 	srv := &http.Server{
