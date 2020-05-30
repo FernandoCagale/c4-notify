@@ -1,4 +1,7 @@
-**c4-notify - docker**
+# c4-notify [Flow](https://github.com/FernandoCagale/c4-kustomize)
+
+
+## Dependencies
 
 `Docker Mongodb`
 
@@ -12,20 +15,21 @@ $ docker run --network host --name mongo -d mongo
 $ docker run --network host --name rabbit -d rabbitmq
 ```
 
-`Docker build c4-notify`
+## Build Docker
+
+`build and publish c4-notify`
 
 ```sh
-$   docker build -t c4-notify .
+$   ./scripts/publish.sh
 ```
 
-`Docker c4-notify`
+## Kubernetes [YAML](https://github.com/FernandoCagale/c4-kustomize/tree/master/c4-notify/base)
 
-```sh
-$   docker run -d --name c4-notify -p 8080:8080 c4-notify
-```
+    *   deployment.yaml
+    *   service.yaml
+    *   virtualservice.yaml
 
-**c4-notify - local**
-
+## Running local
 
 ```sh
 $   go mod download
@@ -41,19 +45,6 @@ $   go mod vendor
 $   go get -u github.com/google/wire/cmd/wire
 ```
 
-`generate wire_gen.go`
-
 ```sh
-$   wire
-```
-
-`generate build`
-
-```sh
-$   go build -o bin/application
-```
-
-
-```sh
-$   ./bin/application
+$   ./scripts/start.sh
 ```
