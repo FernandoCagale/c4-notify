@@ -1,7 +1,22 @@
 # c4-notify [Flow](https://github.com/FernandoCagale/c4-kustomize)
 
+### Docker
 
-## Dependencies
+`running docker multi-stage builds and publish c4-notify`
+
+```sh
+$   ./scripts/publish.sh
+```
+
+### Kubernetes and Istio - [YAML](https://github.com/FernandoCagale/c4-kustomize/tree/master/c4-notify/base)
+
+    *   deployment.yaml
+    *   service.yaml
+    *   virtualservice.yaml
+
+# Running local
+
+### Dependencies [docker-compose](https://github.com/FernandoCagale/c4-kustomize/blob/master/docker-compose.yml)
 
 `Docker Mongodb`
 
@@ -15,21 +30,7 @@ $ docker run --network host --name mongo -d mongo
 $ docker run --network host --name rabbit -d rabbitmq
 ```
 
-## Build Docker
-
-`build and publish c4-notify`
-
-```sh
-$   ./scripts/publish.sh
-```
-
-## Kubernetes [YAML](https://github.com/FernandoCagale/c4-kustomize/tree/master/c4-notify/base)
-
-    *   deployment.yaml
-    *   service.yaml
-    *   virtualservice.yaml
-
-## Running local
+### Standard Go Project [Layout](https://github.com/golang-standards/project-layout)
 
 ```sh
 $   go mod download
@@ -39,7 +40,7 @@ $   go mod download
 $   go mod vendor
 ```
 
-`download wire "dependency injection"`
+`download "dependency injection"` [wire](https://github.com/google/wire)
 
 ```sh
 $   go get -u github.com/google/wire/cmd/wire
