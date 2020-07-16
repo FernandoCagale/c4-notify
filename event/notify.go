@@ -21,9 +21,20 @@ type NotifyEvent struct {
 }
 
 func (event *NotifyEvent) MakeEvents() {
-	go event.ProcessRegistered()
+	registeredError := make(chan error)
+
+	go event.ProcessRegistered(registeredError)
 	go event.ProcessNotifyPayment()
 	go event.ProcessNotifyOrder()
+
+	go func() {
+		for {
+			select {
+			case err := <-registeredError:
+				fmt.Println("Failed ProcessRegistered :" + err.Error())
+			}
+		}
+	}()
 }
 
 func NewNotify(usecase notify.UseCase, event event.Event) *NotifyEvent {
@@ -33,10 +44,10 @@ func NewNotify(usecase notify.UseCase, event event.Event) *NotifyEvent {
 	}
 }
 
-func (eventNotify *NotifyEvent) ProcessRegistered() {
+func (eventNotify *NotifyEvent) ProcessRegistered(eventErrors chan error) {
 	messages, err := eventNotify.event.SubscribeQueue(NOTIFY_REGISTERED)
 	if err != nil {
-		fmt.Println(err.Error())
+		eventErrors <- err
 	}
 
 	for msg := range messages {
@@ -45,12 +56,12 @@ func (eventNotify *NotifyEvent) ProcessRegistered() {
 		var customer entity.Customer
 
 		if err := json.Unmarshal(msg.Payload, &customer); err != nil {
-			fmt.Println(err.Error())
+			eventErrors <- err
 			msg.Nacked()
 		}
 
 		if err = eventNotify.usecase.Create(&customer); err != nil {
-			fmt.Println(err.Error())
+			eventErrors <- err
 			msg.Nacked()
 		}
 
@@ -70,14 +81,8 @@ func (eventNotify *NotifyEvent) ProcessNotifyOrder() {
 		var customer entity.Customer
 
 		if err := json.Unmarshal(msg.Payload, &customer); err != nil {
-			fmt.Println(err.Error())
 			msg.Nacked()
 		}
-
-		//if err = eventNotify.usecase.Create(&customer); err != nil {
-		//	fmt.Println(err.Error())
-		//	msg.Nacked()
-		//}
 
 		msg.Ack() //TODO x-dead-letter-exchange
 	}
@@ -95,14 +100,8 @@ func (eventNotify *NotifyEvent) ProcessNotifyPayment() {
 		var customer entity.Customer
 
 		if err := json.Unmarshal(msg.Payload, &customer); err != nil {
-			fmt.Println(err.Error())
 			msg.Nacked()
 		}
-
-		//if err = eventNotify.usecase.Create(&customer); err != nil {
-		//	fmt.Println(err.Error())
-		//	msg.Nacked()
-		//}
 
 		msg.Ack() //TODO x-dead-letter-exchange
 	}
