@@ -2,19 +2,16 @@ package notify
 
 import (
 	"github.com/FernandoCagale/c4-notify/internal/errors"
-	"github.com/FernandoCagale/c4-notify/internal/event"
 	"github.com/FernandoCagale/c4-notify/pkg/entity"
 )
 
 type OrderUseCase struct {
-	repo  Repository
-	event event.Event
+	repo Repository
 }
 
-func NewUseCase(repo Repository, event event.Event) *OrderUseCase {
+func NewUseCase(repo Repository) *OrderUseCase {
 	return &OrderUseCase{
-		repo:  repo,
-		event: event,
+		repo: repo,
 	}
 }
 
@@ -29,7 +26,6 @@ func (usecase *OrderUseCase) FindById(ID string) (notify *entity.Notify, err err
 func (usecase *OrderUseCase) DeleteById(ID string) (err error) {
 	return usecase.repo.DeleteById(ID)
 }
-
 
 func (usecase *OrderUseCase) Create(customer *entity.Customer) error {
 	err := customer.Validate()
