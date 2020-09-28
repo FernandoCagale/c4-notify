@@ -5,29 +5,29 @@ import (
 	"github.com/FernandoCagale/c4-notify/pkg/entity"
 )
 
-type OrderUseCase struct {
+type NotifyUseCase struct {
 	repo Repository
 }
 
-func NewUseCase(repo Repository) *OrderUseCase {
-	return &OrderUseCase{
+func NewUseCase(repo Repository) *NotifyUseCase {
+	return &NotifyUseCase{
 		repo: repo,
 	}
 }
 
-func (usecase *OrderUseCase) FindAll() (notify []*entity.Notify, err error) {
+func (usecase *NotifyUseCase) FindAll() (notify []*entity.Notify, err error) {
 	return usecase.repo.FindAll()
 }
 
-func (usecase *OrderUseCase) FindById(ID string) (notify *entity.Notify, err error) {
+func (usecase *NotifyUseCase) FindById(ID string) (notify *entity.Notify, err error) {
 	return usecase.repo.FindById(ID)
 }
 
-func (usecase *OrderUseCase) DeleteById(ID string) (err error) {
+func (usecase *NotifyUseCase) DeleteById(ID string) (err error) {
 	return usecase.repo.DeleteById(ID)
 }
 
-func (usecase *OrderUseCase) Create(customer *entity.Customer) error {
+func (usecase *NotifyUseCase) Create(customer *entity.Customer) error {
 	err := customer.Validate()
 	if err != nil {
 		return errors.ErrInvalidPayload

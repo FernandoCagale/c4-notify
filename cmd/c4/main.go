@@ -32,7 +32,7 @@ func main() {
 		panic("Erro to start application")
 	}
 	router := app.MakeHandlers()
-	router.Use(middleware.Header)
+	router.Use(middleware.Header, middleware.Logging)
 
 	srv := &http.Server{
 		Handler:      router,
